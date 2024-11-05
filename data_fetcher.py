@@ -1,31 +1,34 @@
+import MetaTrader5 as mt5
 import pandas as pd
-import numpy as np
 
 class DataFetcher:
-    def __init__(self, symbol, timeframe="4h"):
+    def __init__(self, symbol, timeframe=mt5.TIMEFRAME_H4):
         self.symbol = symbol
         self.timeframe = timeframe
 
-    def fetch_data(self):
+    def initialize_mt5(self):
+        if not mt5.initialize():
+            print("Failed to initialize MT5")
+            return False
+        print("MT5 initialized successfully")
+        return True
+
+    def fetch_data(self, num_candles=500):
         """
-        Simulate fetching OHLCV data. Replace this with real API data fetching.
+        Fetch 4-hour candlestick data from MT5.
         """
-        # Here, we're simulating data. In practice, replace with API calls.
-        data = {
-            "timestamp": pd.date_range(start="2023-01-01", periods=500, freq="4H"),
-            "open": np.random.random(500) * 100,
-            "high": np.random.random(500) * 100,
-            "low": np.random.random(500) * 100,
-            "close": np.random.random(500) * 100,
-            "volume": np.random.random(500) * 1000,
-        }
-        df = pd.DataFrame(data)
-        df = df.sort_values(by="timestamp")
+        rates = mt5.copy_rates_from_pos(self.symbol, self.timeframe, 0, num_candles)
+        if rates is None:
+            raise ValueError(f"Failed to get data for symbol: {self.symbol}")
+
+        # Convert to DataFrame and format the timestamp
+        df = pd.DataFrame(rates)
+        df['time'] = pd.to_datetime(df['time'], unit='s')
         return df
 
     def preprocess_data(self, df):
         """
-        Preprocess the data (e.g., calculate moving averages or indicators).
+        Preprocess data (e.g., calculate moving averages).
         """
         df["20_SMA"] = df["close"].rolling(window=20).mean()  # Example moving average
         return df
