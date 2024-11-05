@@ -10,22 +10,18 @@ class ExecutionManager:
         """
         Executes a trade based on the action ('BUY' or 'SELL') and calculated stop loss.
         """
-        # Get the current market price
         symbol_info = mt5.symbol_info(self.symbol)
         if not symbol_info:
             print(f"{self.symbol} not found")
             return None
 
-        # Ensure the symbol is available for trading
         if not symbol_info.visible:
             mt5.symbol_select(self.symbol, True)
 
-        # Define trade action parameters
         action_type = mt5.ORDER_TYPE_BUY if action == "BUY" else mt5.ORDER_TYPE_SELL
         price = mt5.symbol_info_tick(self.symbol).ask if action == "BUY" else mt5.symbol_info_tick(self.symbol).bid
         stop_loss = self.risk_manager.set_stop_loss(price, "uptrend" if action == "BUY" else "downtrend")
 
-        # Prepare request structure for the trade order
         request = {
             "action": mt5.TRADE_ACTION_DEAL,
             "symbol": self.symbol,
@@ -38,7 +34,6 @@ class ExecutionManager:
             "comment": "Trading bot order",
         }
 
-        # Send order
         result = mt5.order_send(request)
         if result.retcode != mt5.TRADE_RETCODE_DONE:
             print(f"Order failed: {result.retcode}")
