@@ -40,6 +40,14 @@ for i, row in signal_data.iterrows():
 
 # Shutdown MetaTrader5 after completion
 mt5.shutdown()
+import MetaTrader5 as mt5
+
+if mt5.initialize():
+    print("MetaTrader 5 initialized successfully!")
+    mt5.shutdown()
+else:
+    print("Failed to initialize MetaTrader 5")
+
 
 
 import logging
