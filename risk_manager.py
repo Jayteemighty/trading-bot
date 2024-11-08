@@ -2,14 +2,16 @@ class RiskManager:
     def __init__(self, trend_data):
         self.trend_data = trend_data
 
-    def set_stop_loss(self, entry_price, trend):
+    def set_stop_loss_4hr(self, entry_price, low_price):
         """
-        Calculate stop loss based on the trend direction.
+        Sets stop loss below the last low for the 4-hour timeframe.
         """
-        if trend == "uptrend":
-            last_low = self.trend_data[self.trend_data["signal"] == "BUY"]["low"].iloc[-1]
-            stop_loss = last_low * 0.98
-        elif trend == "downtrend":
-            last_high = self.trend_data[self.trend_data["signal"] == "SELL"]["high"].iloc[-1]
-            stop_loss = last_high * 1.02
+        stop_loss = low_price * 0.98  # Example stop loss calculation
+        return stop_loss
+
+    def set_stop_loss_30min(self, support_price):
+        """
+        Sets stop loss below the support level for the 30-minute timeframe.
+        """
+        stop_loss = support_price * 0.98  # Example stop loss calculation
         return stop_loss
