@@ -5,13 +5,6 @@ class DataFetcher:
     def __init__(self, symbol):
         self.symbol = symbol
 
-    def initialize_mt5(self):
-        if not mt5.initialize():
-            print("Failed to initialize MT5")
-            return False
-        print("MT5 initialized successfully")
-        return True
-
     def fetch_data(self, timeframe=mt5.TIMEFRAME_H4, num_candles=500):
         """
         Fetch candlestick data from MT5.
