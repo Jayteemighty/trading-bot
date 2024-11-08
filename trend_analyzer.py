@@ -1,39 +1,33 @@
+import numpy as np
+import pandas as pd
+
 class TrendAnalyzer:
     def __init__(self, data):
         self.data = data
 
-    def is_uptrend(self, row):
+    def detect_uptrend(self, data):
         """
-        Checks for higher highs and higher lows to identify an uptrend.
+        Identifies uptrend with two higher highs and two higher lows touching the trendline.
         """
-        # Get the previous row’s high and low values for comparison
-        previous_low = self.data["low"].shift(1)
-        previous_high = self.data["high"].shift(1)
-        
-        # Check if the current row is higher than the previous row's high/low
-        is_higher_low = row["low"] > previous_low.loc[row.name]
-        is_higher_high = row["high"] > previous_high.loc[row.name]
-        
-        # Return a single boolean result for this row
-        return is_higher_low and is_higher_high
+        # Logic to check if there are two higher highs and two higher lows
+        # Also confirm that the two lows touch the trendline
+        pass  # TODO: Implement
 
-    def is_double_top(self, row):
+    def detect_double_bottom(self, data):
         """
-        Checks for a double top pattern within the defined criteria.
+        Detects a double bottom where the second leg closes within or slightly outside the first leg (valid by wick).
         """
-        # Get the previous high for comparison
-        previous_high = self.data["high"].shift(1)
-        current_high = row["high"]
-        
-        # Double top condition (adjust tolerance as needed)
-        within_range = abs(current_high - previous_high.loc[row.name]) <= previous_high.loc[row.name] * 0.01
-        return within_range
+        pass  # TODO: Implement
+
+    def detect_trendline_break(self, data):
+        """
+        Detects if the trendline breaks after confirming the trend.
+        """
+        pass  # TODO: Implement
 
     def analyze_trend(self):
         """
-        Analyzes the entire data and adds trend signals.
+        Analyzes the data to confirm trend and trendline validation.
         """
-        # Apply the trend detection functions row by row
-        self.data["uptrend"] = self.data.apply(self.is_uptrend, axis=1)
-        self.data["double_top"] = self.data.apply(self.is_double_top, axis=1)
-        return self.data
+        # Calls other functions and return a DataFrame with confirmed signals
+        pass  # TODO: Implement
